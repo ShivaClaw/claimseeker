@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- The one project that knows a browser library. Everything else sees only IBrowserSession. -->
+  <ItemGroup>
+    <ProjectReference Include="../Scout/ClaimSeeker.Scout.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- 1.63.0 is the release proven against a real Chromium by PortalHarness. The package carries a
+         Node-based driver of about 135 MB per platform; SPECIFICATION.md lists that as an open decision. -->
+    <PackageReference Include="Microsoft.Playwright" Version="1.63.0" />
+  </ItemGroup>
+</Project>

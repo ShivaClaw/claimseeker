@@ -1,0 +1,14 @@
+<Project>
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <!-- A warning is a failed build, locally and in CI, so the two can never disagree. -->
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <!-- Every project restores from a checked-in packages.lock.json. CI restores with locked mode, so a
+         changed version or a package whose content hash differs stops the run before any code builds. -->
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+    <!-- Names, addresses and dollar amounts are compared and formatted the same way on every machine. -->
+    <InvariantGlobalization>true</InvariantGlobalization>
+  </PropertyGroup>
+</Project>

@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- The composition root and the command line. Nothing below it knows about files, flags or the browser library. -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <AssemblyName>ClaimSeeker</AssemblyName>
+    <RootNamespace>ClaimSeeker.Engine</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../Pipeline/ClaimSeeker.Pipeline.csproj" />
+    <ProjectReference Include="../Browser/ClaimSeeker.Browser.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- Playbooks ship beside the executable. They are data, read and validated at start. -->
+    <Content Include="../../playbooks/*.md" Link="playbooks/%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="EngineHarness" />
+  </ItemGroup>
+</Project>

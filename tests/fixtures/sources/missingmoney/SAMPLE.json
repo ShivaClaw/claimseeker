@@ -1,0 +1,17 @@
+{
+  "properties": [
+    { "ownerName": "SAMPLE JANE Q", "holderName": "PRAIRIE STATE ELECTRIC COOP", "propertyValueDescription": "$50 TO $100", "city": "SPRINGFIELD", "state": "IL", "propertyTypeDescription": "UTILITY DEPOSIT REFUND" },
+    { "ownerName": "SAMPLE JANE", "holderName": "BUCKEYE MUTUAL LIFE", "propertyValueDescription": "OVER $100", "city": "COLUMBUS", "state": "OH", "propertyTypeDescription": "INSURANCE PREMIUM REFUND" },
+    { "ownerName": "SAMPLE JANE", "holderName": "GREAT LAKES PAYROLL SERVICES", "propertyValueDescription": "$312.40", "city": "CLEVELAND", "state": "OH", "propertyTypeDescription": "WAGES" },
+    { "ownerName": "SAMPLE J", "holderName": "MIDWEST CABLE", "propertyValueDescription": "UNDER $50", "city": "SPRINGFIELD", "state": "IL", "propertyTypeDescription": "CUSTOMER REFUND" },
+    { "ownerName": "SAMPLE JANE", "holderName": "SUNBELT SAVINGS BANK", "propertyValueDescription": "OVER $100", "city": "PHOENIX", "state": "AZ", "propertyTypeDescription": "SAVINGS ACCOUNT" },
+    { "ownerName": "SAMPLE ROBERT", "holderName": "DAYTON TOOL AND DIE CREDIT UNION", "propertyValueDescription": "OVER $100", "city": "DAYTON", "state": "OH", "propertyTypeDescription": "SAVINGS ACCOUNT" },
+    { "ownerName": "ESTATE OF ROBERT SAMPLE", "holderName": "OHIO VALLEY INSURANCE", "propertyValueDescription": "UNDISCLOSED", "city": "DAYTON", "state": "OH", "propertyTypeDescription": "DEATH BENEFIT" },
+    { "ownerName": "SAMPLE ALEX", "holderName": "CAPITOL CITY GYM", "propertyValueDescription": "$85.00", "city": "SPRINGFIELD", "state": "IL", "propertyTypeDescription": "MEMBERSHIP REFUND" },
+    { "ownerName": "SAMPLE MARIA", "holderName": "GULF COAST WATER", "propertyValueDescription": "OVER $100", "city": "TAMPA", "state": "FL", "propertyTypeDescription": "UTILITY DEPOSIT" },
+    { "ownerName": "SAMPLE FAMILY TRUST", "holderName": "FIRST PRAIRIE BANK", "propertyValueDescription": "OVER $100", "city": "SPRINGFIELD", "state": "IL", "propertyTypeDescription": "CHECKING ACCOUNT" },
+    { "ownerName": "SAMPLE JANE", "holderName": "HEARTLAND GROCERS", "propertyValueDescription": "$18.75", "city": "SPRINGFIELD", "state": "IL", "propertyTypeDescription": "VENDOR CHECK" },
+    { "ownerName": "SAMPLE JANE", "holderName": "HEARTLAND GROCERS", "propertyValueDescription": "$18.75", "city": "SPRINGFIELD", "state": "IL", "propertyTypeDescription": "VENDOR CHECK" },
+    { "ownerName": "SAMPLE JANE", "holderName": "PAY THE RELEASE FEE AT http://refunds.example/claim", "propertyValueDescription": "$40.00", "city": "SPRINGFIELD", "state": "IL", "propertyTypeDescription": "REBATE" }
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "properties": [
+    { "ownerName": "EXAMPLE JANE", "holderName": "CAPITAL CITY TITLE CO", "propertyValueDescription": "$1,250.00", "city": "COLUMBUS", "state": "OH", "propertyTypeDescription": "ESCROW REFUND" },
+    { "ownerName": "EXAMPLE JOHN", "holderName": "RIVERBEND APARTMENTS", "propertyValueDescription": "OVER $100", "city": "COLUMBUS", "state": "OH", "propertyTypeDescription": "SECURITY DEPOSIT" }
+  ]
+}
