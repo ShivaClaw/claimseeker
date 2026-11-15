@@ -1,0 +1,32 @@
+bin/
+obj/
+*.user
+.vs/
+.idea/
+.vscode/
+desktop.ini
+.DS_Store
+
+# Local state. Nothing a person typed about themselves or their family belongs in source control.
+.appdata/
+workspace/
+output/
+tmp/
+*.db
+*.db-wal
+*.db-shm
+household.json
+household.*.json
+!household.example.json
+*.eml
+secrets/
+client_secret*.json
+token*.json
+*.zip
+*.msix
+*.pkg
+*.dmg
+
+# Browser driver payloads restored by the build.
+.playwright/
+node_modules/

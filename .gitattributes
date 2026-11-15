@@ -1,0 +1,10 @@
+# Playbooks and fixtures are read byte-for-byte by the harnesses; keep them LF on every checkout.
+* text=auto
+*.md text eol=lf
+*.json text eol=lf
+*.cs text eol=lf
+*.csproj text eol=lf
+*.props text eol=lf
+*.ps1 text eol=lf
+*.yml text eol=lf
+*.eml -text
