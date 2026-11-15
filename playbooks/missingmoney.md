@@ -46,8 +46,9 @@ programs of every participating state, which makes it the first source ClaimSeek
 
 ## Where this recipe came from
 
-It comes from the project's original agent notes, written in July 2026, which record it as worked
-out by hand against the live site: every specific below is there because the notes list the
+It comes from the project's original agent notes
+([docs/legacy/2026-Agent-Notes.md](../docs/legacy/2026-Agent-Notes.md)), written in July 2026,
+which record it as worked out by hand against the live site: every specific below is there because the notes list the
 approach that failed without it. This codebase has run the recipe only against a local copy of the
 page's shape (`tests/PortalHarness`), never against missingmoney.com, so the first live run is also
 the first live check.

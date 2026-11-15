@@ -9,6 +9,9 @@ For what the product is, read [docs/BLUEPRINT.md](docs/BLUEPRINT.md). For how it
 [docs/ClaimSeeker-Project-Summary.md](docs/ClaimSeeker-Project-Summary.md).
 [AGENTS.md](AGENTS.md) has the working rules that apply to every agent.
 
+[docs/legacy](docs/legacy) is history, not guidance. It holds the earlier plan and agent notes, and
+parts of it contradict the invariants below. Never build from it.
+
 ## Invariants
 
 ClaimSeeker handles people's names, addresses and family history, and it acts near their money.

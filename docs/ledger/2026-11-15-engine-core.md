@@ -83,6 +83,16 @@ dotnet SDK 10.0.404 (pinned by global.json)
 
 "0 tracked files" is because nothing had been committed when this ran.
 
+## After the commit
+
+The branch was cloned into an empty folder and the same command was run there, to prove that the
+committed tree is complete. It passed, exit code 0, with the same 981 checks and
+"111 tracked files, none of them a household file, a database, a letter or a workspace". The
+earlier project notes were added under `docs/legacy` after that run.
+
+A push was attempted as a dry run and refused: the Claude GitHub app has no access to the
+repository. The branch was handed over as a git bundle.
+
 ## Can the verifier fail?
 
 Nine faults were put into the working tree one at a time. After each, the verifier was run and the

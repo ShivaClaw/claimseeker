@@ -31,7 +31,8 @@ The current count is 981 offline checks. [README.md](../README.md) has the table
 
 The project began in 2026 as "ClaimScout", an agent persona and a plan for a personal command-line
 tool. The October 2026 brief turned it into a commercial product shaped like CareerSeeker. Both
-were read closely before anything was built.
+were read closely before anything was built. The earlier documents are kept, marked as history, in
+[docs/legacy](legacy).
 
 **Kept, because it was right**
 
