@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- What the engine hands the person: a claim packet, a letter to check, a report. It prepares; it does not file or send. -->
+  <ItemGroup>
+    <ProjectReference Include="../Core/ClaimSeeker.Core.csproj" />
+    <ProjectReference Include="../Scout/ClaimSeeker.Scout.csproj" />
+    <ProjectReference Include="../Store/ClaimSeeker.Store.csproj" />
+    <ProjectReference Include="../Verifier/ClaimSeeker.Verifier.csproj" />
+  </ItemGroup>
+</Project>

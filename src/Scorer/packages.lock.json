@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "dependencies": {
+    "net10.0": {
+      "claimseeker.core": {
+        "type": "Project"
+      },
+      "claimseeker.scout": {
+        "type": "Project",
+        "dependencies": {
+          "ClaimSeeker.Core": "[1.0.0, )"
+        }
+      }
+    }
+  }
+}

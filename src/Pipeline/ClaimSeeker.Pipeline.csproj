@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- The lifecycle graph and the services that move a finding along it. -->
+  <ItemGroup>
+    <ProjectReference Include="../Core/ClaimSeeker.Core.csproj" />
+    <ProjectReference Include="../Scout/ClaimSeeker.Scout.csproj" />
+    <ProjectReference Include="../Scorer/ClaimSeeker.Scorer.csproj" />
+    <ProjectReference Include="../Store/ClaimSeeker.Store.csproj" />
+    <ProjectReference Include="../Verifier/ClaimSeeker.Verifier.csproj" />
+    <ProjectReference Include="../Preparer/ClaimSeeker.Preparer.csproj" />
+    <ProjectReference Include="../Dispatcher/ClaimSeeker.Dispatcher.csproj" />
+  </ItemGroup>
+</Project>

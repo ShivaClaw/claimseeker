@@ -1,0 +1,3 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Domain vocabulary only: no I/O, no packages. Everything else in the solution builds on this. -->
+</Project>

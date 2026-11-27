@@ -1,0 +1,6 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- The Attestation Gate: the one place a draft is allowed to become something a person can send. -->
+  <ItemGroup>
+    <ProjectReference Include="../Core/ClaimSeeker.Core.csproj" />
+  </ItemGroup>
+</Project>

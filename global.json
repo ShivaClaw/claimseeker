@@ -1,0 +1,8 @@
+{
+  "sdk": {
+    "version": "10.0.404",
+    "rollForward": "disable",
+    "allowPrerelease": false,
+    "errorMessage": "This repo pins .NET SDK 10.0.404 (global.json), the same SDK CareerSeeker pins. Install that exact version before building."
+  }
+}

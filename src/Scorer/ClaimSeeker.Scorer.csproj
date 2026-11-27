@@ -1,0 +1,7 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Pure functions: whose record is whose, and which finding is worth a person's time first. -->
+  <ItemGroup>
+    <ProjectReference Include="../Core/ClaimSeeker.Core.csproj" />
+    <ProjectReference Include="../Scout/ClaimSeeker.Scout.csproj" />
+  </ItemGroup>
+</Project>

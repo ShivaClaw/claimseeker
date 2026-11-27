@@ -1,0 +1,7 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Discovery: who to search for, where, and how a playbook is read and run. It knows the browser
+       only through IBrowserSession, so no browser library is referenced here. -->
+  <ItemGroup>
+    <ProjectReference Include="../Core/ClaimSeeker.Core.csproj" />
+  </ItemGroup>
+</Project>

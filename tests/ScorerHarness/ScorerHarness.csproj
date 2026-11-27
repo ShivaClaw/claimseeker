@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="../Shared/Harness.cs" Link="Shared/Harness.cs" />
+    <Compile Include="../Shared/SampleHousehold.cs" Link="Shared/SampleHousehold.cs" />
+    <ProjectReference Include="../../src/Scorer/ClaimSeeker.Scorer.csproj" />
+  </ItemGroup>
+</Project>

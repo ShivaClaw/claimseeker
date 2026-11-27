@@ -1,0 +1,8 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Hands a gate-passed letter to the person as a draft file. It has one verb, and no code that can
+       reach a network: a harness checks both by reflection. -->
+  <ItemGroup>
+    <ProjectReference Include="../Core/ClaimSeeker.Core.csproj" />
+    <ProjectReference Include="../Verifier/ClaimSeeker.Verifier.csproj" />
+  </ItemGroup>
+</Project>

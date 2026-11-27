@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Everything the engine remembers, on this machine and nowhere else. -->
+  <ItemGroup>
+    <ProjectReference Include="../Core/ClaimSeeker.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- 10.0.15 resolves SQLitePCLRaw 2.1.13, which is past the bundled-SQLite advisory GHSA-2m69-gcr7-jv3q. -->
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.15" />
+  </ItemGroup>
+</Project>
