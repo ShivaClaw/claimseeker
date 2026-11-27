@@ -4,7 +4,7 @@ What the product is, who it is for, how it makes money, and the lines it does no
 
 | | |
 |---|---|
-| Written | 2026-11-15 |
+| Written | 2026-11-15. Updated 2026-11-27 after MissingMoney's rules for agents were read |
 | Replaces | The ClaimScout blueprint, roadmap and schematic of 2026, which described a personal command-line tool |
 | Companions | [SPECIFICATION.md](SPECIFICATION.md) for how it works; [ROADMAP.md](ROADMAP.md) for the order of work |
 | Status of the code | Engine core built and checked offline. The engine has never been run against a real source. See [ClaimSeeker-Project-Summary.md](ClaimSeeker-Project-Summary.md) |
@@ -27,8 +27,9 @@ every year.
 
 **The product.** ClaimSeeker is a program that does the looking. It runs on your own Windows or
 Mac computer. You tell it who is in your household, every name each person has used and every
-place they have lived. It searches the official sources on a schedule, decides which records are
-plausibly yours, tells you what each is worth and how much work the claim is, and prepares the
+place they have lived. It searches the official sources on a schedule, by itself where a source
+allows that and with you at the controls where a source asks for a person. It decides which records
+are plausibly yours, tells you what each is worth and how much work the claim is, and prepares the
 paperwork. When something new turns up, the phone app tells you.
 
 **The promise.** It prepares; you review and submit. It never files a claim, sends a message or
@@ -92,7 +93,8 @@ Every source has a mode. It is a field in the source map, and the engine obeys i
 | **Draft** | Writes a letter | Reads it, addresses it and sends it |
 
 A source the map marks auto or assisted is treated as guided until it has a playbook. Today one
-source has a playbook.
+source has a playbook, MissingMoney, and its own rules turn out to make it an assisted source and
+not an automatic one. A source's own rules decide its mode; the engine's convenience does not.
 
 ### The source map
 
@@ -101,7 +103,7 @@ the engine knows the source and shows it to the person as somewhere to look, and
 
 | Source | What is there | Target mode | Today |
 |---|---|---|---|
-| MissingMoney.com (NAUPA) | One search across the participating state programs | Auto | Playbook written, never run live by this code |
+| MissingMoney.com (run by Kelmar for NAST, with NAUPA) | One search across the participating state programs | **Assisted.** Its agent policy asks for a person to confirm each search | Recipe written from old notes, never run live, and not to be run as written. The engine still treats it as automatic; fixing that is the next task |
 | State unclaimed property programs | The same property with exact amounts, and where the claim is filed | Guided, then Auto or Assisted by state | Planned |
 | County foreclosure and tax-sale surplus | The difference when a home sells for more than was owed | Guided, then Auto by county | Planned |
 | DOL Workers Owed Wages | Back wages collected for workers who could not be found; searched by employer | Auto | Planned |
@@ -129,7 +131,7 @@ the engine knows the source and shows it to the person as somewhere to look, and
 | Foreclosure surplus | County surplus, the most differentiated source and the most work | Every county publishes differently |
 | Lottery winnings | **Not covered** | Prizes are claimed with a ticket, not a name. There is nothing to search, and the product should say so |
 
-### Three facts that shape the design
+### Four facts that shape the design
 
 - **Always on does not mean always searching.** State programs take in property on a yearly
   reporting cycle. The engine runs each source on its own cadence, from two weeks for class actions
@@ -141,13 +143,20 @@ the engine knows the source and shows it to the person as somewhere to look, and
 - **Coverage claims go stale.** As of 2024, 49 states were reported to take part in MissingMoney
   and Hawaii did not. The older project notes said California and New York did not take part. That
   has to be checked again at build time and never hard-coded into copy.
+- **Sources have started to tell agents what they may do.** MissingMoney publishes a machine-readable
+  policy for AI agents. It allows an agent to search for an identified person, as long as a
+  person confirms each search and completes the bot check, the agent says who it is, and nothing
+  is kept or shared beyond the person who asked. That is close to what ClaimSeeker already is, and
+  it rules out one thing the first design assumed: searching this source unattended, overnight.
+  For a source like this, "always on" means knowing when a search is due and asking the person to
+  press the button. Expect more sources to publish rules of this kind, and read them first.
 
 ## 5. How it works, from the person's side
 
 1. **Install the engine** and describe the household: each person, the names they have used, where
    they have lived, and the basis on which you may search for them. You attest that it is true.
-2. **The first sweep** runs while you watch. The engine searches each family name once, nationwide,
-   and sorts out on your machine which records are plausibly yours.
+2. **The first sweep** runs while you watch. Where a source asks for a person, the engine fills in
+   the name and you press Search. It sorts out on your machine which records are plausibly yours.
 3. **The findings** arrive in the order worth acting on: what the money is likely worth for the
    time the claim will take, with anything on a deadline first and anything merely possible last.
 4. **Each finding has a claim packet**: what was found, how sure the match is and why, where the
@@ -158,7 +167,7 @@ the engine knows the source and shows it to the person as somewhere to look, and
 6. **You tell it what happened**: filed, in review, more documents needed, paid, denied, not mine.
    The engine cannot say any of those for you.
 7. **It keeps watching.** New records, new sources and approaching deadlines reach you on the
-   phone.
+   phone. For a source that wants a person present, watching means telling you a search is due.
 
 ## 6. System shape
 
@@ -233,7 +242,8 @@ engine is more to install, so it has to earn that:
 - **Your data never leaves.** Names, addresses and family history stay on your computer. There is
   no account and no server-side profile.
 - **Your own connection.** Searches come from your own browser on your own network at a human
-  pace, as you would run them, not from a data centre working through a list.
+  pace, as you would run them, not from a data centre working through a list. The main source
+  now asks agents for exactly that: a person, present, in a browser.
 - **Family scale.** Dozens of name variants across many sources is cheap on your own machine and
   expensive for a cloud service per customer.
 - **Your own mailbox.** Drafts land where you already write.
@@ -244,9 +254,12 @@ engine is more to install, so it has to earn that:
 Not legal advice. A lawyer should review this before launch, state by state.
 
 - **Not a finder.** Flat fee, no share, no custody of funds, no submission, no power of attorney.
-- **Terms of use.** Each source's terms and robots policy are read before a playbook is written,
-  and recorded in it. Where a source forbids automated searching, it is a guided source.
-  **MissingMoney's terms have not been read yet. That is a gate before the first live run.**
+- **Terms of use.** Each source's terms, robots policy and agent policy are read before a playbook
+  is written, and recorded in it. A source's own rules decide its mode.
+  **MissingMoney's were read on 2026-11-26.** They allow a search that a person confirms, by an
+  agent that names itself, with nothing kept beyond the session. They do not allow the unattended
+  search the first playbook describes, and none has been run. Two questions follow and are open:
+  whether the engine may name itself, and what it may keep (specification O14 and O15).
 - **No implied affiliation.** The name, the copy and the store listings stay clearly third-party.
 - **Consent.** A recorded basis for every living person searched. For someone who has died, next
   of kin; the proof of heirship belongs in the claim, not in ClaimSeeker.
@@ -260,6 +273,8 @@ Not legal advice. A lawyer should review this before launch, state by state.
 | Risk | Answer in the design |
 |---|---|
 | A source blocks or forbids automation | Per-source mode; a refusal ends the search and hands it to the person; two refusals put the source on hold; guided mode always works |
+| A source limits what an agent may keep | Open (specification O15). The fallback design keeps the person's own notes of what they did and never the source's records |
+| The engine would do something a source does not allow | It happened: the first playbook assumed an unattended search of MissingMoney. Rules are read before a playbook is written, and the engine is to refuse an assisted source unattended (specification 5.20) |
 | A site changes and a playbook breaks | A changed answer is reported as a broken playbook, never as "nothing found"; playbooks are data and ship as signed updates |
 | False hope from weak matches | Three levels, place decides trust, possible matches never top the list or count in the total |
 | A hostile record (a holder name that is a phishing link) | Source text is disarmed and never becomes a link or an address |
@@ -285,6 +300,9 @@ Researched 2026-10-23. Re-verify before any of it reaches marketing copy.
 
 - Scale of what states hold, reported as about $70 billion:
   [NBC Los Angeles, "States Have $70 Billion in Unclaimed Assets"](https://nbclosangeles.com/news/business/money-report/states-have-70-billion-in-unclaimed-assets-how-to-check-if-any-is-yours/3086368)
+- MissingMoney's own rules, read 2026-11-26: its robots file, its agent policy and its privacy policy,
+  at `/robots.txt`, `/siteai.json` and `/app/privacy-policy` on missingmoney.com. The agent policy
+  uses the [A2WF draft specification](https://a2wf.org/specification/)
 - MissingMoney participation: [MissingMoney.com, Wikipedia](https://en.wikipedia.org/wiki/MissingMoney.com)
 - Retirement Savings Lost and Found, launched December 2024, Login.gov sign-in:
   [PLANSPONSOR](https://www.plansponsor.com/?p=183663),

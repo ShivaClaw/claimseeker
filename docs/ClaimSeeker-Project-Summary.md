@@ -5,8 +5,9 @@ expectations, in the same change that makes something new true.
 
 | | |
 |---|---|
-| Last updated | 2026-11-15 |
-| Phase | Phases 0 and 1 are done, of phases 0 to 9: foundations, and the engine core offline. Next: first live proof ([ROADMAP.md](ROADMAP.md) phase 2) |
+| Last updated | 2026-11-27. Dates on this page are Pacific time |
+| Phase | Phases 0 and 1 are done, of phases 0 to 9: foundations, and the engine core offline. Next: phase 2, rewritten on 2026-11-27 ([ROADMAP.md](ROADMAP.md)). Start at [Next-Session-Handoff.md](Next-Session-Handoff.md) |
+| Repository | Pushed on 2026-11-26. Draft pull request 1, `claude/engine-core` into `main`. CI green on Windows and macOS |
 | Pinned offline verifier | **981 passed, 0 failed** (`scripts/Verify.ps1`, `$ExpectedOfflineTotal`) |
 
 ## The short version
@@ -21,18 +22,22 @@ checks.
 made of invented records, a scripted browser session, or a real browser talking to a page served
 from the same machine.
 
+**And it must not be, as it stands.** The one source with a playbook is MissingMoney. Its published
+agent policy, read on 2026-11-26, requires a person to confirm each search. The engine would run
+that search unattended if told to. The first task of the next session is to make that impossible.
+
 ## What exists
 
 | Area | State |
 |---|---|
 | Engine core (ten projects under `src/`) | Built, checked offline |
 | Command line `claimseeker` | Built, checked offline |
-| MissingMoney playbook | Written from the project's earlier notes. Not yet re-run by this codebase. Its terms of use have not been read |
+| MissingMoney playbook | Written from the project's earlier notes. Not yet re-run by this codebase, and not to be run as written: the site's rules were read on 2026-11-26 and do not allow an unattended search. Parts of the recipe are known to be out of date |
 | Other 17 sources | In the source map as places to look. No playbooks |
 | Scheduler, tray app, dashboard, installer | Not built |
 | Licence, relay, phone apps | Not built |
 | Mailbox drafts | Not built. Drafts are `.eml` files |
-| CI workflow | Written. **UNPROVEN**: it has never run |
+| CI workflow | Runs the verify script on Windows and macOS. Green on its first run, 2026-11-26 |
 
 ## Harnesses
 
@@ -63,9 +68,21 @@ first. Each exposed a missing check, and each was closed:
 | A closed case reached the outbox before the lifecycle refused it | The outbox is counted in the check, and `CaseService.Draft` now tests the state immediately before the call |
 | The first browser search was not captured, and the harness crashed instead of failing | The harness now reports the failure and stops |
 
-## Evidence from this session
+## Evidence
 
-Run on 2026-11-15 in a Linux build environment, with the SDK pinned in `global.json`.
+Each dated block is backed by a ledger entry under [docs/ledger](ledger).
+
+**2026-11-26.**
+
+- The workspace of 2026-11-15 no longer existed. The branch was restored from the bundle handed
+  over that day, and its commit ids matched the ones recorded then.
+- `pwsh scripts/Verify.ps1 -IncludeAudit` on Linux at commit `a43c3f7`: 981 passed, no vulnerable
+  packages.
+- The first CI run, on the draft pull request: 981 passed on Windows and 981 on macOS, with the
+  real-browser harness, the engine smoke and the vulnerability gate on both.
+- No source was searched. MissingMoney's rules were read by opening its pages in a browser.
+
+**2026-11-15.** Run in a Linux build environment, with the SDK pinned in `global.json`.
 
 - `dotnet build ClaimSeeker.sln -c Release`: 0 warnings, 0 errors, with warnings as errors.
 - `dotnet restore ClaimSeeker.sln --locked-mode`: succeeds; 19 lock files, one per project.
@@ -98,11 +115,12 @@ else.
 | No letter can be written without passing the gate | Proven offline, by construction and by mutation |
 | No code path sends anything | Proven by reflection on the outbox assembly |
 | The two stores behave the same | Proven offline |
-| The MissingMoney recipe works on the real site today | **UNPROVEN.** Taken from notes written in July 2026 |
-| What a real MissingMoney answer looks like in every field | **UNPROVEN.** The amount formats and the list cut-off size are unknown |
-| Automated searching is allowed by MissingMoney's terms | **UNKNOWN.** The terms have not been read. Gate G2 |
-| The code builds and passes on Windows and macOS | **UNPROVEN.** Built and run on Linux only |
-| The CI workflow is correct | **UNPROVEN.** Never run. The action versions it pins were checked against GitHub |
+| The MissingMoney recipe works on the real site today | **UNPROVEN, and partly known to be wrong.** Taken from notes written in July 2026. The page now requires a state, the search button has changed, and results are paged |
+| What a real MissingMoney answer looks like in every field | **UNPROVEN.** It cannot be learned without searching |
+| Automated searching is allowed by MissingMoney's rules | **Read 2026-11-26. Not unattended.** A search that a person confirms is allowed, for an agent that names itself, with nothing kept beyond the session. `playbooks/missingmoney.md` |
+| The engine cannot search a source in a way its rules forbid | **FALSE today.** `sweep --live` would search MissingMoney unattended. Only the rule in `AGENTS.md` prevents it |
+| The code builds and passes on Windows and macOS | **Proven 2026-11-26.** CI run 45962091177 at commit `a43c3f7`: 981 passed on `windows-2025-vs2026` and on `macos-26-arm64` |
+| The CI workflow is correct | **Proven 2026-11-26** by the same run: locked restore, build, nine harnesses, doc checks, engine smoke and the vulnerability gate on both systems |
 | The matching rules are well calibrated | **UNPROVEN.** They are reasoned, and tested on invented records only |
 
 ## Known gaps
@@ -117,19 +135,38 @@ else.
   size at which the site cuts a list off is not known.
 - **Only searches by name are planned.** Workers Owed Wages is searched by employer and has no
   planner.
+- **The engine treats MissingMoney as automatic.** The source map and the playbook header say
+  `auto`. Its rules say a person must confirm each search. Specification 5.20 has the fix.
+- **The source map names the wrong operator for MissingMoney.** It says NAUPA. The site says it is
+  operated by Kelmar Associates for the National Association of State Treasurers, in collaboration
+  with NAUPA.
 - **Assisted mode is a field, not a feature.** Nothing opens a pre-filled page for a person yet.
+- **The driver does not name the agent.** MissingMoney's policy asks agents to. Invariant 4 says
+  the driver sets no user agent. That is a decision, not a bug (O14).
 - **The audit log shows tampering and does not prevent it.**
 - **The example household's attestation is pre-filled** so the walk-through runs. A real first-run
   flow must make the person write their own.
 
 ## Decisions waiting for Brandon
 
-The full list is section 12 of [SPECIFICATION.md](SPECIFICATION.md). The ones that block the next
-phase:
+The full list is section 12 of [SPECIFICATION.md](SPECIFICATION.md).
 
-1. Make the repository private again and give the Claude GitHub app access to it (G1).
-2. Read MissingMoney's terms, or ask for them to be read, before any live run (G2).
-3. Say when the first live sweep may run (G3).
+Answered on 2026-11-26:
+
+| Question | Answer |
+|---|---|
+| Give the Claude GitHub app access; make the repository private | Access given. Asked before the first push, Brandon chose to push while the repository is public |
+| Read MissingMoney's rules, then run one supervised live sweep | Yes. The rules were read. They do not allow an unattended search, so no sweep was run |
+| Change the engine now so it cannot search MissingMoney unattended | Documents only for now. The code change is left to a coding session |
+| What is free, what is paid, and the price | Deferred |
+| Share a platform with CareerSeeker | Left to the coding session that reaches that work |
+
+Still waiting, and blocking any real search of MissingMoney:
+
+1. May the engine name itself to a site that asks agents to (O14)? It changes invariant 4.
+2. What may the engine keep from a source that says results are not to be kept beyond the session
+   (O15)? This wants a lawyer's reading and, better, the operator's own answer in writing.
+3. On MissingMoney, search by family name alone, or by given and family name (O16)?
 
 ## Keeping this page honest
 

@@ -7,6 +7,13 @@ the reason.
 The whole contract in one sentence: **the engine looks and prepares; the person decides, submits
 and reports.**
 
+> **Standing hold, 2026-11-27.** The first row of the table below lets the engine search any source
+> that has a playbook. MissingMoney has a playbook, and its own rules require a person to confirm
+> each search. Until the engine enforces that, the hold in [CLAUDE.md](../CLAUDE.md) and the rule in
+> [AGENTS.md](../AGENTS.md) come first: no unattended search of that source. The row itself is to
+> change with the engine, to "search a source whose own rules allow an unattended search". That is
+> a line of this contract moving toward less autonomy, and it is Brandon's to approve.
+
 ## 1. Who can do what
 
 | Act | Engine, unasked | Engine, when the person asks | Person only | Nobody |

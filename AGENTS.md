@@ -13,6 +13,13 @@ version of how work is done here.
   a script, any deploy, any publish or signing step, any change to DNS or hosting, and anything
   that spends money. Reading a public page to research a source is fine; searching it for a
   person's name is a live run.
+- **No live search of MissingMoney.** Its published agent policy, read on 2026-11-26, requires a
+  person to confirm each search and complete the bot check. The playbook header still says `auto`
+  and the engine will run it if told to, so this rule is the only thing in the way: do not run
+  `claimseeker sweep --live`, and do not drive that site's search form from any script, harness or
+  browser tool. Brandon's yes to a first live sweep came before the policy was read. Do not rely
+  on it: ask again once the engine can run a search with a person at the controls.
+  [playbooks/missingmoney.md](playbooks/missingmoney.md) has the detail.
 - **Do not widen scope.** A product promise in [CLAUDE.md](CLAUDE.md) changes only by Brandon's
   explicit decision, recorded in the pull request.
 
@@ -36,8 +43,9 @@ version of how work is done here.
 
 A source the engine searches itself needs all of the following, in one pull request:
 
-1. the source's own terms of use and robots policy read, and what they allow recorded in the
-   playbook's notes;
+1. the source's own terms of use, robots policy and any agent policy it publishes (look for a
+   `SiteAI:` line in robots.txt and a `siteai.json` file) read, and what they allow recorded in the
+   playbook's notes with the date;
 2. a playbook in `playbooks/` that passes `PlaybookValidator`, with a fallback the person can
    follow by hand;
 3. a registry entry in `src/Scout/SourceRegistry.cs` whose hosts and entry address were seen on

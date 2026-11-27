@@ -86,6 +86,19 @@ files named here, stop and confirm intent first.
     nobody needs to be paid a share. Do not add copy that implies government affiliation, that
     promises money, or that a fee is needed to claim.
 
+## Standing hold: MissingMoney
+
+MissingMoney's published agent policy does not allow an unattended search: a person has to confirm
+each search and complete the bot check, the agent has to name itself, and results are not to be
+kept beyond the session. [playbooks/missingmoney.md](playbooks/missingmoney.md) has what was read
+and when.
+
+The code does not enforce this yet. The source map and the playbook header still say `auto`, and
+`claimseeker sweep --live` would run it. Until that is fixed, the rule is in
+[AGENTS.md](AGENTS.md): no live search of MissingMoney, by any means.
+[docs/Next-Session-Handoff.md](docs/Next-Session-Handoff.md) describes the fix, which Brandon has
+left to a coding session. Naming the agent would change invariant 4 and is his decision alone.
+
 ## Verification ritual
 
 Run after every change, before calling work done:

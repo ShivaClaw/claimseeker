@@ -4,7 +4,7 @@ How ClaimSeeker works, in the detail needed to build the rest of it.
 
 | | |
 |---|---|
-| Written | 2026-11-15 |
+| Written | 2026-11-15. Updated 2026-11-27: first CI run, MissingMoney's rules read (5.20), decisions recorded (12). Dates are Pacific time |
 | Companions | [BLUEPRINT.md](BLUEPRINT.md) for what and why; [ROADMAP.md](ROADMAP.md) for the order of work; [Playbook-Format.md](Playbook-Format.md) and [Autonomy-Contract.md](Autonomy-Contract.md), which are normative for their subjects |
 | Code | .NET 10, C#. Ten projects under `src/`, nine console harnesses under `tests/` |
 
@@ -20,8 +20,11 @@ Every section carries one of three marks.
 
 Two facts frame everything below. **The engine has never been run against a real source**: every
 check so far uses invented records, a scripted browser, or a page served from the local machine.
-And **the code has only been built and run on Linux**. Windows and macOS are the targets and are
-unproven until the CI workflow runs.
+And **the one source with a playbook does not allow the search the playbook describes**: section
+5.20 has what its rules say and what has to change.
+
+The checks pass on Linux, Windows and macOS. The first CI run, on 2026-11-26, passed all of them
+on both target systems.
 
 The current count is 981 offline checks. [README.md](../README.md) has the table.
 
@@ -75,7 +78,7 @@ were read closely before anything was built. The earlier documents are kept, mar
 | D6 | **No identifiers and no documents in version 1.** A document vault is a later, separate decision (O8). | Built |
 | D7 | **Consent basis per person**, attested by the account holder. | Built |
 | D8 | **Per-source interaction mode**, with guided as the floor that always works. | Built |
-| D9 | **Terms are read before a playbook is written**, and the first live run of any source needs Brandon's word. | Rule; not yet exercised |
+| D9 | **Terms are read before a playbook is written**, and the first live run of any source needs Brandon's word. | Rule. Exercised once, late: MissingMoney's playbook was written from old notes before its rules were read, and the rules turned out not to allow it (5.20) |
 
 ---
 
@@ -242,7 +245,8 @@ days, an optional playbook id, a deadline note and a plain description.
 - An **entry address is recorded only when it was seen** on the operator's own site or in the
   project's vetted list. Otherwise it is null and the person is given the operator's name.
 - `EffectiveMode` treats an auto or assisted source with no playbook as guided.
-- `Searchable` is the sources that are auto and have a playbook. Today: MissingMoney.
+- `Searchable` is the sources that are auto and have a playbook. Today: MissingMoney. That is the
+  mismatch described in 5.20: the source's own rules do not allow an unattended search.
 - Status is `Proven` (this codebase has run it live), `ProvenLegacy` (a recipe exists from the
   earlier notes and has not been re-run here) or `Planned`. No source is `Proven`.
 
@@ -553,6 +557,100 @@ The workspace defaults to `ClaimSeeker` under the user's local application data 
 
 `delete-all-data` needs the exact phrase `delete <full path>`, refuses a folder that is not a
 ClaimSeeker workspace, and does not follow links out of it.
+
+### 5.20 MissingMoney and its agent policy **[DESIGNED]**
+
+This section is the one place where the built engine is known to be wrong for its source. It was
+written on 2026-11-27, after the source's rules were read. Nothing in it is built.
+
+#### What the source allows
+
+MissingMoney publishes a policy for AI agents at `https://missingmoney.com/siteai.json`, in the
+A2WF draft format, last updated 2026-10-22. [playbooks/missingmoney.md](../playbooks/missingmoney.md)
+holds the full reading. The parts that bind the design:
+
+| The policy | Consequence |
+|---|---|
+| An agent may search for an identified person, or for someone with legal authority over the property. No third parties, no working through names, no lead lists | Fits the consent basis. Argues for searching by given and family name on this source (O16) |
+| A person has to confirm each search, in a browser, and complete any bot check. An agent must not solve, bypass or replay a challenge | **The source is assisted, not automatic.** No unattended sweep, no scheduler-driven search |
+| At most five searches a minute | The engine's thirty seconds between searches is well inside it |
+| The agent has to name itself: name, operator, purpose | The driver sets no user agent today, by invariant. A decision for Brandon (O14) |
+| Results may not be stored, aggregated or shared beyond the person who asked, nor retained beyond the session | Conflicts, on a strict reading, with keeping findings and showing them on a phone (O15) |
+| An agent may guide a claim; the claimant verifies identity and attests in person | Already how the product works |
+
+#### The mismatch today
+
+`SourceRegistry` marks `missingmoney` as `Auto`. It has a playbook, so it is in `Searchable`, and
+`claimseeker sweep --live` would open a browser, fill the form, wait for the bot check to pass by
+itself and press the button. The only thing preventing that is the rule in `AGENTS.md`.
+
+#### Change 2a: no unattended search of an assisted source
+
+Small, and first. Brandon was asked on 2026-11-26 and left this change to a coding session.
+
+1. **Source map.** `missingmoney` becomes `InteractionMode.Assisted`. Its operator is corrected:
+   the site is run by Kelmar Associates for the National Association of State Treasurers, in
+   collaboration with NAUPA.
+2. **Two lists where there was one.** `Searchable` stays "automatic, with a playbook" and becomes
+   empty. A new `Replayable` is "has a playbook": recorded answers can stand in for any source,
+   whatever its mode, because replaying touches no network.
+3. **The runner refuses.** Asked to run a playbook whose mode is not `auto`, the unattended path
+   returns a hand-off, in the engine's words, before it touches the browser. This is the structural
+   guard: even a caller that wires an assisted playbook to a live executor gets nothing.
+4. **The command line.** `sweep --fixtures` replays `Replayable`. `sweep --live` runs `Searchable`
+   only. When a source with a playbook is not automatic, a live sweep opens no browser for it,
+   prints the names for the person to search with the official link, and exits 0. `plan` shows the
+   same list. `sources` shows each source's mode as the engine treats it.
+5. **Effective mode.** Until the assisted search exists, an assisted source is treated as guided:
+   it appears in the report's list of places to look, and the ranker charges guided effort.
+6. **The playbook.** Its header says `assisted`. `Playbook-Format.md` gains the rule that an
+   assisted playbook is never run unattended. The document and the runner change together.
+7. **The Autonomy Contract.** "Search a source that has a playbook" becomes "search a source whose
+   own rules allow an unattended search". That is a line of the contract moving, toward less
+   autonomy; the pull request says so.
+
+Checks that have to exist when 2a is done, each shown to fail when its guard is removed:
+
+- no source is searched unattended in this build, and `missingmoney` is replayable;
+- the runner, handed an assisted playbook and a scripted browser, makes no browser call;
+- `sweep --live` with only assisted sources never calls the browser factory, lists the names to
+  search, and exits 0;
+- `sweep --fixtures` still produces the walk-through's results;
+- the browser harness runs its local page through a copy of the header marked `auto`, and says why.
+
+The fixture-derived effort figures move, because the mode feeds the ranker. The pinned total and
+the harness tables move with the checks.
+
+#### Change 2c: the assisted search
+
+Medium, and after O14 and O15.
+
+- **The person presses Search.** The engine opens the official page in a visible window and fills
+  in the name. It does not click. It tells the person what to do, then waits for the answer to
+  arrive, for minutes and not seconds. A check the site shows is the person's to complete.
+- **One confirmation for each search.** No batch, no loop behind a single click.
+- **Never headless, never scheduled.** When searches fall due, the engine says so: "three searches
+  are ready on MissingMoney". The person chooses when.
+- **A format change.** An assisted playbook needs a way to say "the person acts here". That is a
+  new step kind or a rule about `click` in assisted mode. It is defined in `Playbook-Format.md`
+  first.
+- **The recipe is stale.** The state field is now required (`ALL` searches every state), the search
+  button is `button#btn-turnstile`, and results are paged. Whether the answer still arrives from
+  `/SWS/properties`, and whether one response is one page, can only be learned from a real search.
+
+#### What may be kept (O15)
+
+Three designs, in order of how much they assume:
+
+1. **As built.** The household's own matches are kept on the person's own computer. This needs the
+   operator, or a lawyer, to read "not beyond the requesting user" as allowing it.
+2. **Session only.** Results from this source are shown while the person is there and then dropped.
+   What is kept is the person's own note of what they did: "claimed, Ohio, 2026-12-02". The engine
+   stores the person's words, never the source's record.
+3. **Guided only.** The engine gives the link and the names and never reads the answer.
+
+Design 2 is the fallback to build toward if no answer comes. Design 1 is better for the person and
+should be asked for.
 
 ---
 
@@ -880,14 +978,15 @@ source's terms, the privacy policy, and the store listings.
 
 ## 12. Open decisions
 
-Each needs Brandon's word. The recommendation is what the documents assume until then.
+Each needs Brandon's word. The recommendation is what the documents assume until then. Answers
+given on 2026-11-26 are recorded in place.
 
 | # | Question | Recommendation |
 |---|---|---|
-| O1 | What is free and what is paid? | Free: install, household, sweep by hand, every finding with its official claim link, guided checklist, export, delete. Paid: scheduled sweeps, packets, drafts, tracking, phone pairing and alerts. Never charge to reveal a finding |
-| O2 | One-time fee or subscription, and the prices? | Annual household licence plus a one-time perpetual option at about three times the annual price. Test $59 a year, $9.99 a month, $149 once |
-| O3 | May the first live sweep of MissingMoney run? | Not until its terms of use and robots policy have been read and recorded in the playbook. Then one visible, supervised run with the example family replaced by Brandon's own household |
-| O4 | Share a platform with CareerSeeker (relay protocol, licence service, app shell), or build ClaimSeeker's own? | Share. Adopt the sync protocol and the licence token as they are, and extract the common shell when the second product needs it |
+| O1 | What is free and what is paid? | **Deferred by Brandon, 2026-11-26.** The recommendation stands until he decides. Free: install, household, sweep by hand, every finding with its official claim link, guided checklist, export, delete. Paid: scheduled sweeps, packets, drafts, tracking, phone pairing and alerts. Never charge to reveal a finding |
+| O2 | One-time fee or subscription, and the prices? | **Deferred by Brandon, 2026-11-26.** The recommendation stands until he decides. Annual household licence plus a one-time perpetual option at about three times the annual price. Test $59 a year, $9.99 a month, $149 once |
+| O3 | May the first live sweep of MissingMoney run? | **Answered 2026-11-26, then overtaken.** Brandon said yes. The site's rules were read the same day and do not allow an unattended search, so nothing was run. The question is now O14 to O17 |
+| O4 | Share a platform with CareerSeeker (relay protocol, licence service, app shell), or build ClaimSeeker's own? | **Delegated by Brandon, 2026-11-26, to the coding session that starts phase 5 or 6.** Recommendation: share. Share if all five hold: a second product's payloads cannot be mistaken for the first's on the wire; a licence for one product cannot unlock the other; the relay keeps the two products' pairings apart; nothing shared puts a network reference into an assembly that must not have one; and the shared pieces can be used from this repository without copying private code into it. If one fails, build ClaimSeeker's own to the same wire format and write down which test failed |
 | O5 | Encrypt the workspace database at rest? | Yes before any public build: SQLCipher or an encrypted container, key in the OS keychain. Not needed for a private alpha on an encrypted disk |
 | O6 | Keep Playwright, whose driver adds roughly 135 MB per platform, or move to a smaller browser driver? | Keep it through the first live proof. Decide at packaging time, behind the existing `IBrowserSession` seam |
 | O7 | Is there a role for a model later? | Possibly for reading county surplus lists published as PDF or spreadsheet. Only as extraction of untrusted data that is then matched by the same deterministic rules. Never for letters |
@@ -895,8 +994,12 @@ Each needs Brandon's word. The recommendation is what the documents assume until
 | O9 | Per-state claim requirements (notary thresholds, forms)? | Record them as data when state programs get playbooks; until then the packet says the program's own form is the authority |
 | O10 | County surplus: launch feature or fast follow? | Fast follow. It is the strongest differentiator and the most work; do not hold the first release for it |
 | O11 | Class actions in version 1? | Guided list only. No matching against a person's purchases, no prefilled claim forms |
-| O12 | Is the repository public or private? | Private. It was made public only to unblock access during setup |
+| O12 | Is the repository public or private? | **Answered 2026-11-26: public for now.** Asked before the first push, Brandon chose to push while it is public. The documents here include pricing ideas; look at this again before launch |
 | O13 | The Claude Project's instruction 4 still says "mediate the negotiations" | Change it to "prepare the claim and any letters, and track each case until it is paid" |
+| O14 | May the engine name itself to a site whose agent policy asks for a name, an operator and a purpose? The driver sets no user agent today, by invariant 4 | Yes: add to the browser's own user agent, never replace it, only on sites that ask, and publish a page that says what the agent is. It needs an operator name and that page to exist first. Invariant 4 is reworded from "sets no user agent" to "never hides or alters what the browser is, and names itself where a site asks" |
+| O15 | MissingMoney's policy says results are not to be kept beyond the session. May the engine keep a household's own matches from that source on the person's own computer, and show them on that person's phone? | Do not assume so. Ask the operator in writing, and take a legal reading with the review in G6. Until there is an answer, build the assisted search so that nothing from this source is stored unless the person saves it themselves (5.20, design 2) |
+| O16 | On MissingMoney, search by family name alone or by given and family name? | Given and family name. The policy forbids working through names, a family-name search returns strangers' records, and a person has to confirm each search either way |
+| O17 | Which source carries the first live proof? | Whichever is ready first: an assisted search of MissingMoney once O14 and O15 are answered, or an unattended search of a source whose own rules allow one. Federal sources are the likeliest |
 
 ---
 

@@ -4,7 +4,7 @@ The order of work, what finishes each phase, and what has to be decided before i
 
 | | |
 |---|---|
-| Written | 2026-11-15 |
+| Written | 2026-11-15. Updated 2026-11-27 after the first CI run and the reading of MissingMoney's rules |
 | Replaces | The ClaimScout roadmap of 2026 |
 | Companions | [BLUEPRINT.md](BLUEPRINT.md), [SPECIFICATION.md](SPECIFICATION.md), [ClaimSeeker-Project-Summary.md](ClaimSeeker-Project-Summary.md) for today's status |
 
@@ -12,27 +12,40 @@ The order of work, what finishes each phase, and what has to be decided before i
 
 Phases 0 and 1 are done: the repository conventions, the three handoff documents, and an engine
 core that runs the whole path from a household file to an unsent letter on invented records. It is
-checked by 981 offline checks. The engine has never been run against a real source, the code has
-only been built on Linux, and the CI workflow has never run.
+checked by 981 offline checks, which pass on Linux, Windows and macOS. The engine has never been
+run against a real source.
 
-The next phase is the first live proof. It is short, and it is gated.
+Phase 2 was to be one supervised live sweep of MissingMoney. It did not happen, and as planned it
+cannot: the site's published agent policy, read on 2026-11-26, does not allow an unattended search.
+Phase 2 below has been rewritten around that. [Next-Session-Handoff.md](Next-Session-Handoff.md)
+is the short version of what to do first.
 
 ## Gates
 
 A gate is something only Brandon can open. Work behind a closed gate does not start.
 
-| Gate | What it is | Blocks |
-|---|---|---|
-| **G1** | The repository is private again, and the Claude GitHub app can push to it | Any push, any pull request, CI |
-| **G2** | MissingMoney's terms of use and robots policy have been read, and what they allow is recorded in `playbooks/missingmoney.md` | Phase 2 |
-| **G3** | Brandon says the first live sweep may run, on his machine, for his own household | Phase 2 |
-| **G4** | What is free, what is paid, and the price (specification O1, O2) | Phase 5 |
-| **G5** | Share the relay protocol, licence service and app shell with CareerSeeker, or not (O4) | Phases 5 and 6 |
-| **G6** | Legal review: finder statutes by state, source terms, privacy policy, store listings | Phase 9 |
+| Gate | What it is | Blocks | Standing on 2026-11-27 |
+|---|---|---|---|
+| **G1** | The Claude GitHub app can push to the repository | Any push, any pull request, CI | **Open.** Access was granted on 2026-11-26, and the branch was pushed that day. Brandon chose to leave the repository public for now |
+| **G2** | MissingMoney's rules for automated access have been read, and what they allow is recorded in `playbooks/missingmoney.md` | Phase 2 | **Done, 2026-11-26.** An unattended search is not allowed. A search a person confirms is |
+| **G3** | Brandon says a live search may run, on his machine, for his own household | Phase 2 | **Closed.** Brandon said yes on 2026-11-26, before the rules were read. Nothing was run. Ask again once the engine can run a search with a person at the controls |
+| **G4** | What is free, what is paid, and the price (specification O1, O2) | Phase 5 | **Deferred** by Brandon, 2026-11-26 |
+| **G5** | Share the relay protocol, licence service and app shell with CareerSeeker, or not (O4) | Phases 5 and 6 | **Delegated** by Brandon, 2026-11-26, to the coding session that starts phase 5 or 6 |
+| **G6** | Legal review: finder statutes by state, source terms, privacy policy, store listings | Phase 9 | Not started |
+| **G7** | May the engine name itself to a site that asks agents to (specification O14)? This changes invariant 4 | Any assisted search of MissingMoney | New. Brandon's decision |
+| **G8** | How to read "results must not be kept beyond the session" (specification O15): a legal reading, and ideally the operator's own answer | Storing anything found on MissingMoney | New. Brandon's decision |
 
-If G2 finds that MissingMoney forbids automated searching, it becomes a guided source, the
-playbook is withdrawn, and phase 2 proves the runner on the first source whose terms allow it.
-The product still works: guided mode is the floor.
+### What G2 found
+
+MissingMoney publishes a policy for AI agents. In short: an agent may search for an identified
+person, at most five times a minute, but a person has to confirm each search and complete the bot
+check; the agent has to name itself; and results are not to be kept beyond the session or shared
+beyond the person who asked. `playbooks/missingmoney.md` has the full reading.
+
+So MissingMoney is an **assisted** source, not an automatic one. The engine does not know that
+yet: its source map and the playbook header still say `auto`. Until the engine is changed, the only
+thing preventing an unattended run is the rule in `AGENTS.md`. The product still works without
+automation here: a person can always run the search by hand.
 
 ## How a phase ends
 
@@ -52,7 +65,8 @@ Every phase ends the same way, and none ends on "should work".
 - `scripts/Verify.ps1` with the pinned total and the doc drift checks.
 - `CLAUDE.md`, `AGENTS.md`, the invariants.
 - Blueprint, specification, roadmap, project summary, autonomy contract, playbook format.
-- CI workflow for Windows and macOS. **UNPROVEN**: it has never run.
+- CI workflow for Windows and macOS. First run on 2026-11-26, at commit `a43c3f7`: all 981 checks
+  passed on both, including the real-browser harness and the vulnerability gate.
 
 ## Phase 1: Engine core, offline. Done 2026-11-15
 
@@ -71,23 +85,32 @@ Every phase ends the same way, and none ends on "should work".
 
 ---
 
-## Phase 2: First live proof. Next. Needs G1, G2, G3
+## Phase 2: A search the source allows. Next
 
-The smallest step that turns "should work" into "worked once".
+Rewritten on 2026-11-27. The first two rows of the old plan are done. The live sweep it led up to
+is replaced by the work below, because the source does not allow it.
 
-| Work | Notes |
-|---|---|
-| Run CI on Windows and macOS | First proof on the target systems. Fix whatever the first run finds |
-| Read MissingMoney's terms and robots policy | Record the date and what they allow in the playbook |
-| One supervised live sweep | Brandon's machine, his household, window visible, one family name first, then the rest |
-| Record what a real answer looks like | The shape only. New fixtures are invented records in the real shape; no real record enters the repository |
-| Settle the playbook's unknowns | Does a record carry its own id; how amounts are written; at what size a list is cut off (`maxItemsHint`) |
-| Update the status | Source status to `Proven`, playbook provenance and version, the pinned sentences in the verifier and the docs, in one change |
+| Work | Status | Notes |
+|---|---|---|
+| Run CI on Windows and macOS | Done | Green on the first run, both systems |
+| Read MissingMoney's rules | Done | G2. The playbook holds the reading |
+| **2a. Stop the engine searching MissingMoney unattended** | Next, first | Code. The source map says assisted; the runner refuses an assisted playbook unattended; a live sweep opens no browser for it and lists the names for the person to search; recorded answers still replay. Specification 5.20 has the design and the checks. Brandon has left this to a coding session |
+| **2b. Decide G7 and G8** | Brandon | Whether the engine may name itself, and what may be kept. An assisted search of MissingMoney waits for both |
+| **2c. Build the assisted search** | After 2a and 2b | The engine opens the official page and fills in the name. The person presses Search and clears any check. The engine reads the answer. One confirmation for each search, no more than five a minute. A playbook format change, made in `Playbook-Format.md` first |
+| **2d. Bring the recipe up to date** | With 2c | The state field is now required, the search button has its own id, results are paged. Only what can be seen without searching is known so far |
+| **2e. The first live search** | After 2c. Needs G3 again | Brandon's machine, his own household, his own hand on the Search button. One name first |
+| Record what a real answer looks like | With 2e | The shape only. New fixtures are invented records in the real shape; no real record enters the repository |
+| Update the status | With 2e | Source status, playbook provenance and version, the pinned sentences in the verifier and the docs, in one change |
 
-**Exit test:** one real sweep either captured an answer or was cleanly handed to the person on the
-first refusal with no retry; the record shows it; the documents say exactly what happened.
+A second road to a first live proof does not depend on MissingMoney: pick one source from phase 4
+whose own rules allow an unattended search, read those rules first, and prove the runner there.
+Federal sources are the likeliest candidates. Either road ends phase 2.
 
-**Size:** small. Days, not weeks.
+**Exit test:** the engine cannot be made to search an assisted source unattended, and a check
+fails if that is undone; and one real search, on a source and in a manner its rules allow, either
+captured an answer or was cleanly handed to the person, with the record showing which.
+
+**Size:** 2a is small. 2c is medium. The decisions in 2b are the long pole.
 
 ## Phase 3: Desktop alpha, Windows first
 
@@ -119,7 +142,8 @@ entry, invented fixtures, harness checks, Brandon's word before its first live r
 | Per-state claim requirements as data | Notary thresholds, forms, what an heir must send (O9). Feeds the packet and the effort estimate |
 | Federal sources searchable by name | PBGC, FDIC, then others, one at a time |
 | Search by employer | Workers Owed Wages needs a planner that searches employer names from the household file |
-| Assisted mode | Open the official page and fill the name; the person clears the challenge and presses search. First source: the bankruptcy courts' locator |
+| Assisted mode for a second source | Built in phase 2 for MissingMoney. Next: the bankruptcy courts' locator, whose search has a CAPTCHA |
+| Terms as a recorded fact | A source the engine searches by itself carries a record of when its rules were read and what they allow, and the engine refuses to search one that has none |
 | Deadlines on findings | Feed the ranker's urgency and the `EXPIRED` state, which exist and are not yet wired |
 | Playbook feed, signed | Specification 6.4 |
 
@@ -219,8 +243,9 @@ These are not postponed. They are out.
 
 ## Order, and what can move
 
-Phase 2 comes first because everything else rests on a recipe that has not been run. Phases 3 and
-4 can overlap once phase 2 is done. Phase 5 can start as soon as G4 is answered, and should not
+Phase 2 comes first because everything else rests on a search the engine has never made for real,
+and because 2a closes the gap between what the main source allows and what the engine would do if
+told. Phases 3 and 4 can overlap once 2a is done. Phase 5 can start as soon as G4 is answered, and should not
 wait for phase 4 to finish. Phase 7 has outside lead time and should be started during phase 3.
 County surplus (phase 8) is the strongest reason to buy; if the alpha shows the basic sources are
 not enough to carry the product, pull it forward.

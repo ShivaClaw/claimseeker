@@ -61,7 +61,13 @@ $RequiredPhrases = @(
     @{ File = "playbooks/missingmoney.md";            Phrase = "Not yet re-run by this codebase" },
     @{ File = "README.md";                            Phrase = "Filing a claim is free" },
     @{ File = "CLAUDE.md";                            Phrase = "scripts/Verify.ps1" },
-    @{ File = "AGENTS.md";                            Phrase = "Nothing live" }
+    @{ File = "AGENTS.md";                            Phrase = "Nothing live" },
+    # MissingMoney's rules do not allow an unattended search, and the engine does not enforce that
+    # yet. Until it does, these three sentences are what stands in the way. When the engine refuses
+    # an assisted source by itself (specification 5.20, change 2a), they change with the code.
+    @{ File = "playbooks/missingmoney.md";            Phrase = "Do not run this playbook against the live site" },
+    @{ File = "AGENTS.md";                            Phrase = "No live search of MissingMoney" },
+    @{ File = "CLAUDE.md";                            Phrase = "Standing hold: MissingMoney" }
 )
 
 function Write-Step {

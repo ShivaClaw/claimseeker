@@ -6,9 +6,11 @@ Filing a claim is free.
 
 > **Status: engine core, offline only.** This repository holds the search, matching, ranking, claim
 > packet and letter-drafting core, proven by **981 offline checks** on invented records and a page
-> served from the local machine. The engine has never been run against a real source. There is no
-> installer, no scheduler, no phone app and no licence service yet.
-> [docs/ROADMAP.md](docs/ROADMAP.md) says what comes next and what has to be decided first.
+> served from the local machine, on Linux, Windows and macOS.
+> The engine has never been run against a real source. There is no installer, no scheduler, no
+> phone app and no licence service yet.
+> [docs/ROADMAP.md](docs/ROADMAP.md) says what comes next and what has to be decided first, and
+> [docs/Next-Session-Handoff.md](docs/Next-Session-Handoff.md) is where the next session starts.
 
 ## What it is for
 
@@ -72,8 +74,11 @@ The example household is an invented family. The sweep reports
 four records that belong to nobody in the household.
 
 `claimseeker sweep --live` is the only command that contacts a real source. It is never implied: a
-sweep with neither `--live` nor `--fixtures` is refused. It has not been run. See the gates in
-[docs/ROADMAP.md](docs/ROADMAP.md) before running it.
+sweep with neither `--live` nor `--fixtures` is refused. It has not been run, and **it must not be
+run yet.** The one source with a playbook is MissingMoney, and that site's published agent policy
+does not allow an unattended search: a person has to confirm each one. The engine does not enforce
+that yet. [playbooks/missingmoney.md](playbooks/missingmoney.md) has what the policy says, and
+[docs/ROADMAP.md](docs/ROADMAP.md) has the gates.
 
 ## Verify
 
@@ -126,6 +131,7 @@ The browser harness needs Microsoft Edge or Google Chrome on the machine.
 - [docs/ClaimSeeker-Project-Summary.md](docs/ClaimSeeker-Project-Summary.md): the living status page.
 - [docs/Autonomy-Contract.md](docs/Autonomy-Contract.md): what the engine may do on its own.
 - [docs/Playbook-Format.md](docs/Playbook-Format.md): the playbook format, normative.
+- [docs/Next-Session-Handoff.md](docs/Next-Session-Handoff.md): what to do next, and what is on hold.
 - [CLAUDE.md](CLAUDE.md) and [AGENTS.md](AGENTS.md): rules for coding agents working here.
 
 ## Licence
